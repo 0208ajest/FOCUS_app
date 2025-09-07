@@ -18,6 +18,8 @@ interface FocusModeProps {
 export function FocusMode({ onBack, language }: FocusModeProps) {
   const t = useTranslation(language);
   const [isTimerActive, setIsTimerActive] = useState(false);
+  const [workDuration, setWorkDuration] = useState(25); // 作業時間（分）
+  const [breakDuration, setBreakDuration] = useState(5); // 休憩時間（分）
   const [timeLeft, setTimeLeft] = useState(25 * 60); // 25分のポモドーロタイマー
   const [volume, setVolume] = useState([70]);
   const [session, setSession] = useState<'work' | 'break'>('work');
@@ -43,14 +45,14 @@ export function FocusMode({ onBack, language }: FocusModeProps) {
             setIsTimerActive(false);
             // セッション切り替え
             setSession(session === 'work' ? 'break' : 'work');
-            return session === 'work' ? 5 * 60 : 25 * 60; // 休憩5分、作業25分
+            return session === 'work' ? breakDuration * 60 : workDuration * 60;
           }
           return prev - 1;
         });
       }, 1000);
     }
     return () => clearInterval(interval);
-  }, [isTimerActive, session]); // timeLeftの依存関係を削除
+  }, [isTimerActive, session, workDuration, breakDuration]); // timeLeftの依存関係を削除
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -60,7 +62,8 @@ export function FocusMode({ onBack, language }: FocusModeProps) {
 
   const resetTimer = () => {
     setIsTimerActive(false);
-    setTimeLeft(session === 'work' ? 25 * 60 : 5 * 60);
+    setTimeLeft(session === 'work' ? workDuration * 60 : breakDuration * 60);
+    setSession('work');
   };
 
   return (
@@ -79,7 +82,7 @@ export function FocusMode({ onBack, language }: FocusModeProps) {
             {t.back}
           </Button>
           <h1 className="text-2xl font-light text-white">{t.focusMode}</h1>
-          <ReactionButton />
+          <ReactionButton pageId="focus" />
         </div>
       </div>
 
@@ -123,6 +126,50 @@ export function FocusMode({ onBack, language }: FocusModeProps) {
           </div>
         </div>
 
+      </div>
+
+      {/* Timer Settings */}
+      <div className="absolute bottom-20 left-0 right-0 z-10 p-6">
+        <div className="glass-card p-4 max-w-md mx-auto">
+          <div className="flex items-center justify-between space-x-6">
+            <div className="flex items-center space-x-3 text-white">
+              <span className="text-sm font-medium">Work:</span>
+              <Slider
+                value={[workDuration]}
+                onValueChange={(value: number[]) => {
+                  setWorkDuration(value[0]);
+                  if (session === 'work' && !isTimerActive) {
+                    setTimeLeft(value[0] * 60);
+                  }
+                }}
+                min={5}
+                max={60}
+                step={5}
+                className="w-20"
+                disabled={isTimerActive}
+              />
+              <span className="text-xs text-white/70">{workDuration}min</span>
+            </div>
+            <div className="flex items-center space-x-3 text-white">
+              <span className="text-sm font-medium">Break:</span>
+              <Slider
+                value={[breakDuration]}
+                onValueChange={(value: number[]) => {
+                  setBreakDuration(value[0]);
+                  if (session === 'break' && !isTimerActive) {
+                    setTimeLeft(value[0] * 60);
+                  }
+                }}
+                min={1}
+                max={30}
+                step={1}
+                className="w-20"
+                disabled={isTimerActive}
+              />
+              <span className="text-xs text-white/70">{breakDuration}min</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Footer - BGM Controls */}

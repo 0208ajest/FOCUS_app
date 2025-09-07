@@ -1,25 +1,88 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart } from 'lucide-react';
 
 interface ReactionButtonProps {
-  initialLikes?: number;
+  pageId?: string; // ページ識別子（'home', 'focus', 'sleep'など）
   onLike?: (newCount: number) => void;
   className?: string;
 }
 
-export function ReactionButton({ initialLikes = 0, onLike, className = '' }: ReactionButtonProps) {
-  const [likes, setLikes] = useState(initialLikes);
+// グローバルないいね数を管理するためのAPI（簡易版）
+const GLOBAL_LIKES_KEY = 'global_likes';
+const LOCAL_LIKES_KEY = 'local_likes';
+
+// ローカルストレージからいいね数を取得
+const getLocalLikes = (pageId: string): number => {
+  try {
+    const localLikes = JSON.parse(localStorage.getItem(LOCAL_LIKES_KEY) || '{}');
+    return localLikes[pageId] || 0;
+  } catch {
+    return 0;
+  }
+};
+
+// ローカルストレージにいいね数を保存
+const saveLocalLikes = (pageId: string, count: number): void => {
+  try {
+    const localLikes = JSON.parse(localStorage.getItem(LOCAL_LIKES_KEY) || '{}');
+    localLikes[pageId] = count;
+    localStorage.setItem(LOCAL_LIKES_KEY, JSON.stringify(localLikes));
+  } catch (error) {
+    console.error('Failed to save local likes:', error);
+  }
+};
+
+// グローバルいいね数を取得（簡易版 - 実際のアプリではAPIを使用）
+const getGlobalLikes = (pageId: string): number => {
+  try {
+    const globalLikes = JSON.parse(localStorage.getItem(GLOBAL_LIKES_KEY) || '{}');
+    return globalLikes[pageId] || 0;
+  } catch {
+    return 0;
+  }
+};
+
+// グローバルいいね数を更新（簡易版 - 実際のアプリではAPIを使用）
+const updateGlobalLikes = (pageId: string, increment: number): void => {
+  try {
+    const globalLikes = JSON.parse(localStorage.getItem(GLOBAL_LIKES_KEY) || '{}');
+    globalLikes[pageId] = (globalLikes[pageId] || 0) + increment;
+    localStorage.setItem(GLOBAL_LIKES_KEY, JSON.stringify(globalLikes));
+  } catch (error) {
+    console.error('Failed to update global likes:', error);
+  }
+};
+
+export function ReactionButton({ pageId = 'default', onLike, className = '' }: ReactionButtonProps) {
+  const [localLikes, setLocalLikes] = useState(0);
+  const [globalLikes, setGlobalLikes] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [flyingHearts, setFlyingHearts] = useState<Array<{ id: number; x: number; y: number }>>([]);
+
+  // 初期化時にローカルとグローバルのいいね数を読み込み
+  useEffect(() => {
+    setLocalLikes(getLocalLikes(pageId));
+    setGlobalLikes(getGlobalLikes(pageId));
+  }, [pageId]);
 
   const handleLike = () => {
     if (isAnimating) return;
     
     setIsAnimating(true);
-    const newLikes = likes + 1;
-    setLikes(newLikes);
-    onLike?.(newLikes);
+    
+    // ローカルといいね数を更新
+    const newLocalLikes = localLikes + 1;
+    const newGlobalLikes = globalLikes + 1;
+    
+    setLocalLikes(newLocalLikes);
+    setGlobalLikes(newGlobalLikes);
+    
+    // ローカルストレージに保存
+    saveLocalLikes(pageId, newLocalLikes);
+    updateGlobalLikes(pageId, 1);
+    
+    onLike?.(newGlobalLikes);
 
     // ハートが飛んでいくエフェクト
     const heartCount = 3 + Math.floor(Math.random() * 3); // 3-5個のハート
@@ -91,10 +154,10 @@ export function ReactionButton({ initialLikes = 0, onLike, className = '' }: Rea
           animate={isAnimating ? { scale: [1, 1.3, 1] } : {}}
           transition={{ duration: 0.3 }}
         >
-          <Heart className={`h-4 w-4 ${likes > 0 ? 'text-red-500 fill-red-500' : 'text-white'}`} />
+          <Heart className={`h-4 w-4 ${globalLikes > 0 ? 'text-red-500 fill-red-500' : 'text-white'}`} />
         </motion.div>
         <span className="text-sm font-medium">
-          {likes > 0 ? likes : ''}
+          {globalLikes > 0 ? globalLikes : ''}
         </span>
       </motion.button>
     </div>

@@ -107,7 +107,7 @@ export function SleepMode({ onBack, language }: SleepModeProps) {
             {t.back}
           </Button>
           <h1 className="text-2xl font-light text-white">{t.sleepMode}</h1>
-          <ReactionButton />
+          <ReactionButton pageId="sleep" />
         </div>
       </div>
 

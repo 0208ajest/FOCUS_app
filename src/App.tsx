@@ -46,7 +46,7 @@ export default function App() {
           <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
             {/* ダッシュボードボタン（右上） */}
             <div className="absolute top-6 right-6 z-20 flex items-center space-x-3">
-              <ReactionButton />
+              <ReactionButton pageId="home" />
               <motion.button
                 onClick={() => setCurrentMode("dashboard")}
                 className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-all duration-300 border border-white/20"
