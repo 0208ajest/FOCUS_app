@@ -7,13 +7,14 @@ import { DigitalClock } from "./components/DigitalClock";
 import { LanguageSelector } from "./components/LanguageSelector";
 import { Language } from "./components/translations";
 import { useTranslation } from "./components/translations";
-import { BarChart3, Focus, Moon } from "lucide-react";
+import { BarChart3, Focus, Moon, Waves } from "lucide-react";
 
 type Mode = "home" | "focus" | "sleep" | "dashboard";
 
 export default function App() {
   const [currentMode, setCurrentMode] = useState<Mode>("home");
   const [language, setLanguage] = useState<Language>("en");
+  const [isWaveActive, setIsWaveActive] = useState(false);
   const t = useTranslation(language);
 
   const renderMode = () => {
@@ -54,62 +55,43 @@ export default function App() {
               </motion.button>
             </div>
 
-            {/* 砂時計エフェクト */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="relative w-16 h-20">
-                {/* Hourglass outline */}
-                <div className="absolute inset-0 border-2 border-white/30 rounded-t-full rounded-b-full"
-                     style={{
-                       clipPath: 'polygon(20% 0%, 80% 0%, 60% 20%, 60% 80%, 80% 100%, 20% 100%, 40% 80%, 40% 20%)'
-                     }}>
-                </div>
-                
-                {/* Sand particles falling */}
-                {Array.from({ length: 8 }).map((_, i) => (
+            {/* 波打つエフェクト */}
+            {isWaveActive && (
+              <div className="absolute inset-0 overflow-hidden">
+                {Array.from({ length: 5 }).map((_, i) => (
                   <motion.div
                     key={i}
-                    className="absolute w-1 h-1 bg-amber-300/60 rounded-full"
+                    className="absolute w-full h-32 bg-gradient-to-r from-transparent via-blue-400/20 to-transparent"
                     style={{
-                      left: '50%',
-                      top: '45%',
+                      bottom: `${i * 20}%`,
                     }}
-                    animate={{
-                      y: [0, 20],
-                      x: [0, Math.random() * 4 - 2],
-                      opacity: [0.6, 0],
-                    }}
+                    initial={{ x: '-100%' }}
+                    animate={{ x: '100%' }}
                     transition={{
-                      duration: Math.random() * 1 + 1,
+                      duration: 3 + i * 0.5,
                       repeat: Infinity,
-                      delay: Math.random() * 2,
+                      delay: i * 0.3,
+                      ease: "linear"
                     }}
                   />
                 ))}
-                
-                {/* Top sand */}
-                <motion.div
-                  className="absolute top-2 left-1/2 transform -translate-x-1/2 w-6 h-3 bg-amber-300/40 rounded-t-full"
-                  animate={{
-                    height: ['12px', '8px', '12px'],
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                  }}
-                />
-                
-                {/* Bottom sand */}
-                <motion.div
-                  className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-6 h-3 bg-amber-300/40 rounded-b-full"
-                  animate={{
-                    height: ['8px', '12px', '8px'],
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                  }}
-                />
               </div>
+            )}
+
+            {/* 波打つアイコン（左上） */}
+            <div className="absolute top-6 left-6 z-20">
+              <motion.button
+                onClick={() => setIsWaveActive(!isWaveActive)}
+                className={`w-12 h-12 backdrop-blur-md rounded-full flex items-center justify-center transition-all duration-300 border ${
+                  isWaveActive 
+                    ? 'bg-blue-500/20 text-blue-300 border-blue-300/30' 
+                    : 'bg-white/10 text-white hover:bg-white/20 border-white/20'
+                }`}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Waves className="h-5 w-5" />
+              </motion.button>
             </div>
             
             <div className="flex flex-col items-center justify-center min-h-screen p-4 relative z-10">
@@ -131,7 +113,7 @@ export default function App() {
                   whileTap={{ scale: 0.98 }}
                 >
                   <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-3xl" />
-                  <Focus className="h-12 w-12 relative z-10" />
+                  <Focus className="h-8 w-8 relative z-10" />
                   <div className="relative z-10 text-center">
                     <div className="text-xl font-medium">{t.focus}</div>
                     <div className="text-sm opacity-80 mt-1">{t.focusDescription}</div>
@@ -146,7 +128,7 @@ export default function App() {
                   whileTap={{ scale: 0.98 }}
                 >
                   <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-3xl" />
-                  <Moon className="h-12 w-12 relative z-10" />
+                  <Moon className="h-8 w-8 relative z-10" />
                   <div className="relative z-10 text-center">
                     <div className="text-xl font-medium">{t.sleep}</div>
                     <div className="text-sm opacity-80 mt-1">{t.sleepDescription}</div>

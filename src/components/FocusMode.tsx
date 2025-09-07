@@ -67,17 +67,54 @@ export function FocusMode({ onBack, language }: FocusModeProps) {
       <VisualEffects type="focus" />
       
       {/* Header */}
-      <div className="relative z-10 p-6 flex items-center justify-between">
-        <Button
-          onClick={onBack}
-          variant="ghost"
-          className="text-white hover:bg-white/10"
-        >
-          <ArrowLeft className="h-5 w-5 mr-2" />
-          {t.back}
-        </Button>
-        <h1 className="text-2xl font-light text-white">{t.focusMode}</h1>
-        <div className="w-20" />
+      <div className="relative z-10 p-6">
+        <div className="flex items-center justify-between mb-4">
+          <Button
+            onClick={onBack}
+            variant="ghost"
+            className="text-white hover:bg-white/10"
+          >
+            <ArrowLeft className="h-5 w-5 mr-2" />
+            {t.back}
+          </Button>
+          <h1 className="text-2xl font-light text-white">{t.focusMode}</h1>
+          <div className="w-20" />
+        </div>
+        
+        {/* BGM Controls */}
+        <div className="glass-card p-4 flex items-center justify-between max-w-md mx-auto">
+          <div className="flex items-center space-x-3 text-white">
+            <Music className="h-4 w-4" />
+            <span className="text-sm font-medium">{t.focusMusic}</span>
+          </div>
+          <div className="flex items-center space-x-3">
+            <Button
+              onClick={() => isMusicPlaying ? pauseMusic() : playMusic()}
+              size="sm"
+              className="glass-button rounded-full w-8 h-8 p-0"
+            >
+              {isMusicPlaying ? (
+                <Pause className="h-3 w-3" />
+              ) : (
+                <Play className="h-3 w-3" />
+              )}
+            </Button>
+            <div className="flex items-center space-x-2">
+              <Volume2 className="h-3 w-3 text-white/70" />
+              <Slider
+                value={volume}
+                onValueChange={(value: number[]) => {
+                  setVolume(value);
+                  setMusicVolume(value[0] / 100);
+                }}
+                max={100}
+                step={1}
+                className="w-16"
+                disabled={!isMusicPlaying}
+              />
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Main Content */}
@@ -120,44 +157,6 @@ export function FocusMode({ onBack, language }: FocusModeProps) {
           </div>
         </div>
 
-        {/* Music Control */}
-        <div className="glass-card p-6 space-y-4 w-80">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3 text-white">
-              <Music className="h-5 w-5" />
-              <span className="font-medium">{t.focusMusic}</span>
-            </div>
-            <Button
-              onClick={() => isMusicPlaying ? pauseMusic() : playMusic()}
-              size="sm"
-              className="glass-button rounded-full"
-            >
-              {isMusicPlaying ? (
-                <Pause className="h-4 w-4" />
-              ) : (
-                <Play className="h-4 w-4" />
-              )}
-            </Button>
-          </div>
-          
-          <div className="flex items-center space-x-3 text-white">
-            <Volume2 className="h-4 w-4" />
-            <Slider
-              value={volume}
-              onValueChange={(value: number[]) => {
-                setVolume(value);
-                setMusicVolume(value[0] / 100);
-              }}
-              max={100}
-              step={1}
-              className="flex-1"
-              disabled={!isMusicPlaying}
-            />
-            <span className="text-sm text-white/70 w-12">
-              {volume[0]}%
-            </span>
-          </div>
-        </div>
       </div>
     </div>
   );
