@@ -7,7 +7,7 @@ import { VisualEffects } from './VisualEffects';
 import { Language } from './translations';
 import { useTranslation } from './translations';
 import { useAudio } from '../hooks/useAudio';
-import { SOUND_PATHS } from '../config/sounds';
+import { SOUND_PATHS } from '../assets/audio';
 
 interface FocusModeProps {
   onBack: () => void;

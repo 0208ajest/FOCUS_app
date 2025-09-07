@@ -14,5 +14,16 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
+    rollupOptions: {
+      output: {
+        assetFileNames: (assetInfo) => {
+          // 音声ファイルを適切なディレクトリに配置
+          if (assetInfo.name && assetInfo.name.endsWith('.mp3')) {
+            return 'assets/sounds/[name][extname]';
+          }
+          return 'assets/[name]-[hash][extname]';
+        }
+      }
+    }
   },
 })

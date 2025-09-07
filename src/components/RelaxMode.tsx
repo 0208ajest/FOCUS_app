@@ -8,7 +8,7 @@ import { DigitalClock } from './DigitalClock';
 import { Language } from './translations';
 import { useTranslation } from './translations';
 import { useMultiAudio } from '../hooks/useMultiAudio';
-import { SOUND_PATHS, SOUND_PRESETS } from '../config/sounds';
+import { SOUND_PATHS, SOUND_PRESETS } from '../assets/audio';
 
 interface RelaxModeProps {
   onBack: () => void;
@@ -79,11 +79,11 @@ export function RelaxMode({ onBack, language }: RelaxModeProps) {
     },
     {
       name: t.riverside,
-      settings: SOUND_PRESETS.riverside
+      settings: SOUND_PRESETS.oceanBreeze
     },
     {
       name: t.mountainBreeze,
-      settings: SOUND_PRESETS.mountainBreeze
+      settings: SOUND_PRESETS.mountainRetreat
     }
   ];
 

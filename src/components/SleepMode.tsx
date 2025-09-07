@@ -7,7 +7,7 @@ import { DigitalClock } from './DigitalClock';
 import { Language } from './translations';
 import { useTranslation } from './translations';
 import { useAudio } from '../hooks/useAudio';
-import { SOUND_PATHS } from '../config/sounds';
+import { SOUND_PATHS } from '../assets/audio';
 
 interface SleepModeProps {
   onBack: () => void;
