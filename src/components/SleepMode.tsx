@@ -21,7 +21,7 @@ export function SleepMode({ onBack, language }: SleepModeProps) {
   const [selectedScene, setSelectedScene] = useState<SleepScene>('rain');
   const [volume, setVolume] = useState([50]);
   const [fadeTimer, setFadeTimer] = useState(30); // 30分でフェードアウト
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isFadeActive, setIsFadeActive] = useState(false);
   
   // 選択されたシーンに応じたサウンド管理
   const getSoundPath = (scene: SleepScene) => {
@@ -61,17 +61,21 @@ export function SleepMode({ onBack, language }: SleepModeProps) {
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
-    if (isPlaying && fadeTimer > 0) {
+    if (isFadeActive && fadeTimer > 0 && isMusicPlaying) {
       interval = setInterval(() => {
         setVolume((prev) => {
           const newVolume = Math.max(0, prev[0] - (50 / (fadeTimer * 60))); // 50から0に徐々に減少
           setMusicVolume(newVolume / 100);
+          if (newVolume <= 0) {
+            setIsFadeActive(false);
+            pauseMusic();
+          }
           return [newVolume];
         });
       }, 1000);
     }
     return () => clearInterval(interval);
-  }, [isPlaying, fadeTimer, setMusicVolume]);
+  }, [isFadeActive, fadeTimer, setMusicVolume, isMusicPlaying, pauseMusic]);
 
   const scenes = [
     {
@@ -157,11 +161,21 @@ export function SleepMode({ onBack, language }: SleepModeProps) {
           
           <div className="flex items-center space-x-4">
             <Button
-              onClick={() => setIsPlaying(!isPlaying)}
+              onClick={() => {
+                if (isFadeActive) {
+                  setIsFadeActive(false);
+                  pauseMusic();
+                } else {
+                  setIsFadeActive(true);
+                  if (!isMusicPlaying) {
+                    playMusic();
+                  }
+                }
+              }}
               size="lg"
               className="glass-button rounded-full px-8"
             >
-              {isPlaying ? t.stopSleep : t.startSleep}
+              {isFadeActive ? t.stopSleep : t.startSleep}
             </Button>
             
             <Button
