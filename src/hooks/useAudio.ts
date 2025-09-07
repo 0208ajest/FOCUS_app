@@ -14,7 +14,7 @@ interface UseAudioOptions {
   autoPlay?: boolean;
 }
 
-export function useAudio({ src, loop = false, volume = 1, autoPlay = false }: UseAudioOptions) {
+export function useAudio({ src, loop = false, volume = 1 }: UseAudioOptions) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [state, setState] = useState<AudioState>({
     isPlaying: false,

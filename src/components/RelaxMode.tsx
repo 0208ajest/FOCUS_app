@@ -27,11 +27,8 @@ export function RelaxMode({ onBack, language }: RelaxModeProps) {
   
   // マルチオーディオフックを使用
   const {
-    sounds: soundStates,
     masterVolume,
     isPlaying,
-    playSound,
-    pauseSound,
     setSoundVolume,
     setMasterVolume,
     playAll,

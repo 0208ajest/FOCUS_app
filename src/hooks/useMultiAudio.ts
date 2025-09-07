@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import { useAudio } from './useAudio';
 
 interface MultiAudioState {
   sounds: Record<string, { isPlaying: boolean; volume: number }>;

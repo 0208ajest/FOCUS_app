@@ -34,7 +34,7 @@ export function FocusMode({ onBack, language }: FocusModeProps) {
   });
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: ReturnType<typeof setInterval>;
     if (isTimerActive) {
       interval = setInterval(() => {
         setTimeLeft((prev) => {

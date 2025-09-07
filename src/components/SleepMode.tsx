@@ -60,7 +60,7 @@ export function SleepMode({ onBack, language }: SleepModeProps) {
   }, [selectedScene]);
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: ReturnType<typeof setInterval>;
     if (isPlaying && fadeTimer > 0) {
       interval = setInterval(() => {
         setVolume((prev) => {
