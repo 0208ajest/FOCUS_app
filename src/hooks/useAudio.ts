@@ -11,7 +11,6 @@ interface UseAudioOptions {
   src: string;
   loop?: boolean;
   volume?: number;
-  autoPlay?: boolean;
 }
 
 export function useAudio({ src, loop = false, volume = 1 }: UseAudioOptions) {

@@ -1,21 +1,21 @@
 // サウンドファイルのパス設定
 export const SOUND_PATHS = {
   focus: {
-    ambient: '/src/assets/sounds/focus/ambient.mp3',
-    rain: '/src/assets/sounds/focus/rain.mp3',
-    forest: '/src/assets/sounds/focus/forest.mp3',
+    ambient: '/assets/sounds/focus/ambient.mp3',
+    rain: '/assets/sounds/focus/rain.mp3',
+    forest: '/assets/sounds/focus/forest.mp3',
   },
   sleep: {
-    fireplace: '/src/assets/sounds/sleep/fireplace.mp3',
-    stars: '/src/assets/sounds/sleep/stars.mp3',
-    rain: '/src/assets/sounds/sleep/rain.mp3',
+    fireplace: '/assets/sounds/sleep/fireplace.mp3',
+    stars: '/assets/sounds/sleep/stars.mp3',
+    rain: '/assets/sounds/sleep/rain.mp3',
   },
   relax: {
-    wind: '/src/assets/sounds/relax/wind.mp3',
-    birds: '/src/assets/sounds/relax/birds.mp3',
-    water: '/src/assets/sounds/relax/water.mp3',
-    forest: '/src/assets/sounds/relax/forest.mp3',
-    ambient: '/src/assets/sounds/relax/ambient.mp3',
+    wind: '/assets/sounds/relax/wind.mp3',
+    birds: '/assets/sounds/relax/birds.mp3',
+    water: '/assets/sounds/relax/water.mp3',
+    forest: '/assets/sounds/relax/forest.mp3',
+    ambient: '/assets/sounds/relax/ambient.mp3',
   },
 } as const;
 
