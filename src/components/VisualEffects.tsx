@@ -3,7 +3,7 @@ import { memo } from 'react';
 
 interface VisualEffectsProps {
   type: 'focus' | 'sleep' | 'relax';
-  scene?: 'fire' | 'stars' | 'rain';
+  scene?: 'fire' | 'rain';
 }
 
 export const VisualEffects = memo(function VisualEffects({ type, scene }: VisualEffectsProps) {
@@ -77,34 +77,33 @@ export const VisualEffects = memo(function VisualEffects({ type, scene }: Visual
   }
 
   if (type === 'sleep') {
-    if (scene === 'stars') {
+
+    if (scene === 'fire') {
       return (
         <div className="absolute inset-0 overflow-hidden">
-          {/* Distant stars - 80個の小さな点滅 */}
-          {Array.from({ length: 80 }).map((_, i) => {
-            const size = Math.random() * 2 + 0.5;
-            return (
-              <motion.div
-                key={`star-${i}`}
-                className="absolute bg-white rounded-full"
-                style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                  width: size,
-                  height: size,
-                }}
-                animate={{
-                  opacity: [0.3, 1, 0.3],
-                  scale: [0.8, 1.5, 0.8],
-                }}
-                transition={{
-                  duration: Math.random() * 4 + 3,
-                  repeat: Infinity,
-                  delay: Math.random() * 5,
-                }}
-              />
-            );
-          })}
+          {/* Dark night sky background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-900/50 via-slate-900/30 to-black/40" />
+          
+          {/* Small twinkling stars - 20個の小さな星 */}
+          {Array.from({ length: 20 }).map((_, i) => (
+            <motion.div
+              key={`small-${i}`}
+              className="absolute w-1 h-1 bg-white rounded-full"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+              }}
+              animate={{
+                opacity: [0.3, 1, 0.3],
+                scale: [1, 1.5, 1],
+              }}
+              transition={{
+                duration: Math.random() * 3 + 2,
+                repeat: Infinity,
+                delay: Math.random() * 4,
+              }}
+            />
+          ))}
           
           {/* Bright twinkling stars - 15個の明るい星（十字光線付き） */}
           {Array.from({ length: 15 }).map((_, i) => (
@@ -173,15 +172,6 @@ export const VisualEffects = memo(function VisualEffects({ type, scene }: Visual
               }}
             />
           ))}
-        </div>
-      );
-    }
-
-    if (scene === 'fire') {
-      return (
-        <div className="absolute inset-0 overflow-hidden">
-          {/* Simple dark atmosphere */}
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-900/50 via-slate-900/30 to-black/40" />
         </div>
       );
     }

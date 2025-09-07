@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Button } from './ui/button';
-import { ArrowLeft, Volume2, Timer, Flame, Star, Cloud, Play, Pause, Music } from 'lucide-react';
+import { ArrowLeft, Volume2, Timer, Star, Cloud, Play, Pause, Music } from 'lucide-react';
 import { Slider } from './ui/slider';
 import { VisualEffects } from './VisualEffects';
 import { DigitalClock } from './DigitalClock';
@@ -14,7 +14,7 @@ interface SleepModeProps {
   language: Language;
 }
 
-type SleepScene = 'fire' | 'stars' | 'rain';
+type SleepScene = 'fire' | 'rain';
 
 export function SleepMode({ onBack, language }: SleepModeProps) {
   const t = useTranslation(language);
@@ -29,9 +29,7 @@ export function SleepMode({ onBack, language }: SleepModeProps) {
       case 'rain':
         return SOUND_PATHS.sleep.rain;
       case 'fire':
-        return SOUND_PATHS.sleep.fireplace;
-      case 'stars':
-        return SOUND_PATHS.sleep.stars;
+        return SOUND_PATHS.sleep.fireplace; // Fireplace名称で星空エフェクト
       default:
         return SOUND_PATHS.sleep.rain;
     }
@@ -81,14 +79,8 @@ export function SleepMode({ onBack, language }: SleepModeProps) {
     {
       id: 'fire' as const,
       name: t.fireplace,
-      icon: Flame,
-      description: t.cracklingFire,
-    },
-    {
-      id: 'stars' as const,
-      name: t.starryNight,
-      icon: Star,
-      description: t.gentleNight,
+      icon: Star, // 星空エフェクトを採用
+      description: t.gentleNight, // 星空の説明を使用
     },
     {
       id: 'rain' as const,
