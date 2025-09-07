@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Button } from './ui/button';
-import { ArrowLeft, Volume2, Timer, Star, Cloud, Play, Pause, Music } from 'lucide-react';
+import { ArrowLeft, Volume2, Timer, Star, Cloud, Play, Pause } from 'lucide-react';
 import { Slider } from './ui/slider';
 import { VisualEffects } from './VisualEffects';
 import { DigitalClock } from './DigitalClock';
@@ -96,7 +96,7 @@ export function SleepMode({ onBack, language }: SleepModeProps) {
       
       {/* Header */}
       <div className="relative z-10 p-6">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between">
           <Button
             onClick={onBack}
             variant="ghost"
@@ -106,15 +106,6 @@ export function SleepMode({ onBack, language }: SleepModeProps) {
             {t.back}
           </Button>
           <h1 className="text-2xl font-light text-white">{t.sleepMode}</h1>
-          <div className="w-20" />
-        </div>
-        
-        {/* BGM Controls */}
-        <div className="glass-card p-4 flex items-center justify-between max-w-lg mx-auto">
-          <div className="flex items-center space-x-3 text-white">
-            <Music className="h-4 w-4" />
-            <span className="text-sm font-medium">{scenes.find(s => s.id === selectedScene)?.name}</span>
-          </div>
           <div className="flex items-center space-x-3">
             <Button
               onClick={() => isMusicPlaying ? pauseMusic() : playMusic()}
@@ -141,44 +132,34 @@ export function SleepMode({ onBack, language }: SleepModeProps) {
                 disabled={!isMusicPlaying}
               />
             </div>
-          </div>
-        </div>
-
-        {/* Fade Timer Controls */}
-        <div className="glass-card p-4 flex items-center justify-between max-w-md mx-auto mt-2">
-          <div className="flex items-center space-x-3 text-white">
-            <Timer className="h-4 w-4" />
-            <span className="text-sm font-medium">{t.autoFade}</span>
-          </div>
-          <div className="flex items-center space-x-3">
-            <Button
-              onClick={() => {
-                if (isFadeActive) {
-                  setIsFadeActive(false);
-                  pauseMusic();
-                } else {
-                  setIsFadeActive(true);
-                  if (!isMusicPlaying) {
-                    playMusic();
-                  }
-                }
-              }}
-              size="sm"
-              className={`glass-button rounded-full px-4 ${
-                isFadeActive ? 'bg-blue-500/20 text-blue-300' : ''
-              }`}
-            >
-              {isFadeActive ? t.stopSleep : t.startSleep}
-            </Button>
             <div className="flex items-center space-x-2">
-              <span className="text-xs text-white/70">{fadeTimer}min</span>
+              <Button
+                onClick={() => {
+                  if (isFadeActive) {
+                    setIsFadeActive(false);
+                    pauseMusic();
+                  } else {
+                    setIsFadeActive(true);
+                    if (!isMusicPlaying) {
+                      playMusic();
+                    }
+                  }
+                }}
+                size="sm"
+                className={`glass-button rounded-full px-3 ${
+                  isFadeActive ? 'bg-blue-500/20 text-blue-300' : ''
+                }`}
+              >
+                <Timer className="h-3 w-3 mr-1" />
+                {fadeTimer}min
+              </Button>
               <Slider
                 value={[fadeTimer]}
                 onValueChange={(value: number[]) => setFadeTimer(value[0])}
                 min={5}
                 max={60}
                 step={5}
-                className="w-16"
+                className="w-12"
               />
             </div>
           </div>

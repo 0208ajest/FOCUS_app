@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Button } from './ui/button';
-import { ArrowLeft, Play, Pause, RotateCcw, Volume2, Music } from 'lucide-react';
+import { ArrowLeft, Play, Pause, RotateCcw, Volume2 } from 'lucide-react';
 import { Slider } from './ui/slider';
 import { DigitalClock } from './DigitalClock';
 import { VisualEffects } from './VisualEffects';
@@ -68,7 +68,7 @@ export function FocusMode({ onBack, language }: FocusModeProps) {
       
       {/* Header */}
       <div className="relative z-10 p-6">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between">
           <Button
             onClick={onBack}
             variant="ghost"
@@ -78,15 +78,6 @@ export function FocusMode({ onBack, language }: FocusModeProps) {
             {t.back}
           </Button>
           <h1 className="text-2xl font-light text-white">{t.focusMode}</h1>
-          <div className="w-20" />
-        </div>
-        
-        {/* BGM Controls */}
-        <div className="glass-card p-4 flex items-center justify-between max-w-md mx-auto">
-          <div className="flex items-center space-x-3 text-white">
-            <Music className="h-4 w-4" />
-            <span className="text-sm font-medium">{t.focusMusic}</span>
-          </div>
           <div className="flex items-center space-x-3">
             <Button
               onClick={() => isMusicPlaying ? pauseMusic() : playMusic()}
