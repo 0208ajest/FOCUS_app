@@ -4,6 +4,7 @@ import { ArrowLeft, Volume2, Timer, Star, Cloud, Play, Pause } from 'lucide-reac
 import { Slider } from './ui/slider';
 import { VisualEffects } from './VisualEffects';
 import { DigitalClock } from './DigitalClock';
+import { ReactionButton } from './ReactionButton';
 import { Language } from './translations';
 import { useTranslation } from './translations';
 import { useAudio } from '../hooks/useAudio';
@@ -106,7 +107,7 @@ export function SleepMode({ onBack, language }: SleepModeProps) {
             {t.back}
           </Button>
           <h1 className="text-2xl font-light text-white">{t.sleepMode}</h1>
-          <div className="w-20" />
+          <ReactionButton />
         </div>
       </div>
 

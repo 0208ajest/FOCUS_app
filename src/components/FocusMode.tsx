@@ -4,6 +4,7 @@ import { ArrowLeft, Play, Pause, RotateCcw, Volume2 } from 'lucide-react';
 import { Slider } from './ui/slider';
 import { DigitalClock } from './DigitalClock';
 import { VisualEffects } from './VisualEffects';
+import { ReactionButton } from './ReactionButton';
 import { Language } from './translations';
 import { useTranslation } from './translations';
 import { useAudio } from '../hooks/useAudio';
@@ -78,7 +79,7 @@ export function FocusMode({ onBack, language }: FocusModeProps) {
             {t.back}
           </Button>
           <h1 className="text-2xl font-light text-white">{t.focusMode}</h1>
-          <div className="w-20" />
+          <ReactionButton />
         </div>
       </div>
 

@@ -5,6 +5,7 @@ import { SleepMode } from "./components/SleepMode";
 import { Dashboard } from "./components/Dashboard";
 import { DigitalClock } from "./components/DigitalClock";
 import { LanguageSelector } from "./components/LanguageSelector";
+import { ReactionButton } from "./components/ReactionButton";
 import { Language } from "./components/translations";
 import { useTranslation } from "./components/translations";
 import { BarChart3, Focus, Moon, Waves } from "lucide-react";
@@ -44,7 +45,8 @@ export default function App() {
         return (
           <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
             {/* ダッシュボードボタン（右上） */}
-            <div className="absolute top-6 right-6 z-20">
+            <div className="absolute top-6 right-6 z-20 flex items-center space-x-3">
+              <ReactionButton />
               <motion.button
                 onClick={() => setCurrentMode("dashboard")}
                 className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-all duration-300 border border-white/20"
@@ -58,7 +60,7 @@ export default function App() {
             {/* 水滴の波紋エフェクト */}
             {isWaveActive && (
               <div className="absolute inset-0 overflow-hidden">
-                {Array.from({ length: 5 }).map((_, i) => (
+                {Array.from({ length: 8 }).map((_, i) => (
                   <motion.div
                     key={i}
                     className="absolute border-2 border-blue-400/30 rounded-full"
@@ -67,16 +69,17 @@ export default function App() {
                       top: `${Math.random() * 100}%`,
                       width: 0,
                       height: 0,
+                      transform: 'translate(-50%, -50%)',
                     }}
                     animate={{
-                      width: [0, 150, 300, 450, 600],
-                      height: [0, 150, 300, 450, 600],
-                      opacity: [0.8, 0.6, 0.4, 0.2, 0],
+                      width: [0, 100, 200, 300, 400, 500],
+                      height: [0, 100, 200, 300, 400, 500],
+                      opacity: [0.8, 0.7, 0.5, 0.3, 0.1, 0],
                     }}
                     transition={{
-                      duration: 4,
+                      duration: 6,
                       repeat: Infinity,
-                      delay: i * 1.2,
+                      delay: i * 1.8,
                       ease: "easeOut"
                     }}
                   />
