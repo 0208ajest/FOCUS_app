@@ -102,6 +102,46 @@ export function FocusMode({ onBack, language }: FocusModeProps) {
             </div>
           </div>
           
+          {/* Compact Timer Settings */}
+          <div className="flex justify-center space-x-6">
+            <div className="flex items-center space-x-2 text-white">
+              <span className="text-sm">Work:</span>
+              <Slider
+                value={[workDuration]}
+                onValueChange={(value: number[]) => {
+                  setWorkDuration(value[0]);
+                  if (session === 'work' && !isTimerActive) {
+                    setTimeLeft(value[0] * 60);
+                  }
+                }}
+                min={5}
+                max={60}
+                step={5}
+                className="w-16"
+                disabled={isTimerActive}
+              />
+              <span className="text-xs text-white/70 w-8">{workDuration}m</span>
+            </div>
+            <div className="flex items-center space-x-2 text-white">
+              <span className="text-sm">Break:</span>
+              <Slider
+                value={[breakDuration]}
+                onValueChange={(value: number[]) => {
+                  setBreakDuration(value[0]);
+                  if (session === 'break' && !isTimerActive) {
+                    setTimeLeft(value[0] * 60);
+                  }
+                }}
+                min={1}
+                max={30}
+                step={1}
+                className="w-16"
+                disabled={isTimerActive}
+              />
+              <span className="text-xs text-white/70 w-8">{breakDuration}m</span>
+            </div>
+          </div>
+          
           <div className="flex items-center justify-center space-x-4">
             <Button
               onClick={() => setIsTimerActive(!isTimerActive)}
@@ -128,49 +168,6 @@ export function FocusMode({ onBack, language }: FocusModeProps) {
 
       </div>
 
-      {/* Timer Settings */}
-      <div className="absolute bottom-20 left-0 right-0 z-10 p-6">
-        <div className="glass-card p-4 max-w-md mx-auto">
-          <div className="flex items-center justify-between space-x-6">
-            <div className="flex items-center space-x-3 text-white">
-              <span className="text-sm font-medium">Work:</span>
-              <Slider
-                value={[workDuration]}
-                onValueChange={(value: number[]) => {
-                  setWorkDuration(value[0]);
-                  if (session === 'work' && !isTimerActive) {
-                    setTimeLeft(value[0] * 60);
-                  }
-                }}
-                min={5}
-                max={60}
-                step={5}
-                className="w-20"
-                disabled={isTimerActive}
-              />
-              <span className="text-xs text-white/70">{workDuration}min</span>
-            </div>
-            <div className="flex items-center space-x-3 text-white">
-              <span className="text-sm font-medium">Break:</span>
-              <Slider
-                value={[breakDuration]}
-                onValueChange={(value: number[]) => {
-                  setBreakDuration(value[0]);
-                  if (session === 'break' && !isTimerActive) {
-                    setTimeLeft(value[0] * 60);
-                  }
-                }}
-                min={1}
-                max={30}
-                step={1}
-                className="w-20"
-                disabled={isTimerActive}
-              />
-              <span className="text-xs text-white/70">{breakDuration}min</span>
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* Footer - BGM Controls */}
       <div className="absolute bottom-0 left-0 right-0 z-10 p-6">
