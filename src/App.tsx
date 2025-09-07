@@ -58,25 +58,25 @@ export default function App() {
             {/* 水滴の波紋エフェクト */}
             {isWaveActive && (
               <div className="absolute inset-0 overflow-hidden">
-                {Array.from({ length: 3 }).map((_, i) => (
+                {Array.from({ length: 5 }).map((_, i) => (
                   <motion.div
                     key={i}
                     className="absolute border-2 border-blue-400/30 rounded-full"
                     style={{
-                      left: '50%',
-                      top: '50%',
+                      left: `${Math.random() * 100}%`,
+                      top: `${Math.random() * 100}%`,
                       width: 0,
                       height: 0,
                     }}
                     animate={{
-                      width: [0, 200, 400, 600],
-                      height: [0, 200, 400, 600],
-                      opacity: [0.8, 0.6, 0.4, 0],
+                      width: [0, 150, 300, 450, 600],
+                      height: [0, 150, 300, 450, 600],
+                      opacity: [0.8, 0.6, 0.4, 0.2, 0],
                     }}
                     transition={{
-                      duration: 2,
+                      duration: 4,
                       repeat: Infinity,
-                      delay: i * 0.7,
+                      delay: i * 1.2,
                       ease: "easeOut"
                     }}
                   />

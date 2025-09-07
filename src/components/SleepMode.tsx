@@ -106,63 +106,7 @@ export function SleepMode({ onBack, language }: SleepModeProps) {
             {t.back}
           </Button>
           <h1 className="text-2xl font-light text-white">{t.sleepMode}</h1>
-          <div className="flex items-center space-x-3">
-            <Button
-              onClick={() => isMusicPlaying ? pauseMusic() : playMusic()}
-              size="sm"
-              className="glass-button rounded-full w-8 h-8 p-0"
-            >
-              {isMusicPlaying ? (
-                <Pause className="h-3 w-3" />
-              ) : (
-                <Play className="h-3 w-3" />
-              )}
-            </Button>
-            <div className="flex items-center space-x-2">
-              <Volume2 className="h-3 w-3 text-white/70" />
-              <Slider
-                value={volume}
-                onValueChange={(value: number[]) => {
-                  setVolume(value);
-                  setMusicVolume(value[0] / 100);
-                }}
-                max={100}
-                step={1}
-                className="w-16"
-                disabled={!isMusicPlaying}
-              />
-            </div>
-            <div className="flex items-center space-x-2">
-              <Button
-                onClick={() => {
-                  if (isFadeActive) {
-                    setIsFadeActive(false);
-                    pauseMusic();
-                  } else {
-                    setIsFadeActive(true);
-                    if (!isMusicPlaying) {
-                      playMusic();
-                    }
-                  }
-                }}
-                size="sm"
-                className={`glass-button rounded-full px-3 ${
-                  isFadeActive ? 'bg-blue-500/20 text-blue-300' : ''
-                }`}
-              >
-                <Timer className="h-3 w-3 mr-1" />
-                {fadeTimer}min
-              </Button>
-              <Slider
-                value={[fadeTimer]}
-                onValueChange={(value: number[]) => setFadeTimer(value[0])}
-                min={5}
-                max={60}
-                step={5}
-                className="w-12"
-              />
-            </div>
-          </div>
+          <div className="w-20" />
         </div>
       </div>
 
@@ -200,14 +144,71 @@ export function SleepMode({ onBack, language }: SleepModeProps) {
           </div>
         </div>
 
-        {/* Current Scene Info */}
-        <div className="glass-card p-6 text-center space-y-4">
-          <h3 className="text-lg text-white font-medium">
-            {scenes.find(s => s.id === selectedScene)?.name}
-          </h3>
-          <p className="text-white/70">
-            {scenes.find(s => s.id === selectedScene)?.description}
-          </p>
+      </div>
+
+      {/* Footer - BGM Controls */}
+      <div className="absolute bottom-0 left-0 right-0 z-10 p-6">
+        <div className="glass-card p-4 flex items-center justify-center space-x-6 max-w-lg mx-auto">
+          <div className="flex items-center space-x-3 text-white">
+            <span className="text-sm font-medium">{scenes.find(s => s.id === selectedScene)?.name}</span>
+          </div>
+          <div className="flex items-center space-x-3">
+            <Button
+              onClick={() => isMusicPlaying ? pauseMusic() : playMusic()}
+              size="sm"
+              className="glass-button rounded-full w-8 h-8 p-0"
+            >
+              {isMusicPlaying ? (
+                <Pause className="h-3 w-3" />
+              ) : (
+                <Play className="h-3 w-3" />
+              )}
+            </Button>
+            <div className="flex items-center space-x-2">
+              <Volume2 className="h-3 w-3 text-white/70" />
+              <Slider
+                value={volume}
+                onValueChange={(value: number[]) => {
+                  setVolume(value);
+                  setMusicVolume(value[0] / 100);
+                }}
+                max={100}
+                step={1}
+                className="w-20"
+                disabled={!isMusicPlaying}
+              />
+            </div>
+            <div className="flex items-center space-x-2">
+              <Button
+                onClick={() => {
+                  if (isFadeActive) {
+                    setIsFadeActive(false);
+                    pauseMusic();
+                  } else {
+                    setIsFadeActive(true);
+                    if (!isMusicPlaying) {
+                      playMusic();
+                    }
+                  }
+                }}
+                size="sm"
+                className={`glass-button rounded-full px-3 ${
+                  isFadeActive ? 'bg-blue-500/20 text-blue-300' : ''
+                }`}
+              >
+                <Timer className="h-3 w-3 mr-1" />
+                {fadeTimer}min
+              </Button>
+              <Slider
+                value={[fadeTimer]}
+                onValueChange={(value: number[]) => setFadeTimer(value[0])}
+                min={5}
+                max={60}
+                step={5}
+                className="w-16"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
