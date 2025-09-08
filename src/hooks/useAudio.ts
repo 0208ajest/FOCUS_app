@@ -78,7 +78,14 @@ export function useAudio({ src, loop = false, volume = 1 }: UseAudioOptions) {
       audio.pause();
       audio.src = '';
     };
-  }, [src, loop, volume]);
+  }, [src, loop]); // volumeを依存配列から削除
+
+  // 音量変更を別途処理
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume;
+    }
+  }, [volume]);
 
   const play = async () => {
     if (audioRef.current) {
