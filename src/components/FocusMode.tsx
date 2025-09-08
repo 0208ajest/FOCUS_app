@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Button } from './ui/button';
-import { ArrowLeft, Play, Pause, RotateCcw, Volume2, Waves } from 'lucide-react';
+import { ArrowLeft, Play, Pause, RotateCcw, Waves } from 'lucide-react';
 import { Slider } from './ui/slider';
 import { DigitalClock } from './DigitalClock';
 import { VisualEffects } from './VisualEffects';

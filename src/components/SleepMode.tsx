@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Button } from './ui/button';
-import { ArrowLeft, Volume2, Timer, Star, Cloud, Play, Pause } from 'lucide-react';
-import { Slider } from './ui/slider';
+import { ArrowLeft, Star, Cloud } from 'lucide-react';
 import { VisualEffects } from './VisualEffects';
 import { DigitalClock } from './DigitalClock';
 import { ReactionButton } from './ReactionButton';
@@ -19,8 +18,6 @@ type SleepScene = 'fire' | 'rain';
 export function SleepMode({ onBack, language }: SleepModeProps) {
   const t = useTranslation(language);
   const [selectedScene, setSelectedScene] = useState<SleepScene>('rain');
-  const [fadeTimer, setFadeTimer] = useState(30); // 30分でフェードアウト
-  const [isFadeActive, setIsFadeActive] = useState(false);
   
   // グローバルオーディオコントロール
   const { playTrack, currentTrack } = useAudioContext();

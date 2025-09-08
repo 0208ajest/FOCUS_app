@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
+import { Play, Pause, Volume2 } from 'lucide-react';
 import { Slider } from './ui/slider';
 import { useAudioContext } from '../contexts/AudioContext';
 
