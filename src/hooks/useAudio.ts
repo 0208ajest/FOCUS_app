@@ -23,11 +23,21 @@ export function useAudio({ src, loop = false, volume = 1 }: UseAudioOptions) {
   });
 
   useEffect(() => {
-    if (!audioRef.current) {
-      audioRef.current = new Audio(src);
-      audioRef.current.loop = loop;
-      audioRef.current.volume = volume;
+    // 既存のオーディオをクリーンアップ
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.src = '';
     }
+
+    // srcが空の場合はオーディオを作成しない
+    if (!src) {
+      return;
+    }
+
+    // 新しいオーディオを作成
+    audioRef.current = new Audio(src);
+    audioRef.current.loop = loop;
+    audioRef.current.volume = volume;
 
     const audio = audioRef.current;
 
@@ -64,6 +74,9 @@ export function useAudio({ src, loop = false, volume = 1 }: UseAudioOptions) {
       audio.removeEventListener('ended', handleEnded);
       audio.removeEventListener('play', handlePlay);
       audio.removeEventListener('pause', handlePause);
+      // クリーンアップ時にオーディオを停止
+      audio.pause();
+      audio.src = '';
     };
   }, [src, loop, volume]);
 

@@ -2,16 +2,23 @@
 import ambientFocus from './sounds/focus/ambient.mp3';
 import forestRelax from './sounds/relax/forest.mp3';
 import rainSleep from './sounds/sleep/rain.mp3';
+import fireplaceSleep from './sounds/sleep/fireplace.mp3';
+import oceanZenBell from './sounds/home/ocean_zen_bell.mp3';
+import rainZenBell from './sounds/home/rain_zen_bell.mp3';
 
 // 音声ファイルのパス設定
 export const SOUND_PATHS = {
+  home: {
+    oceanZenBell: oceanZenBell,
+    rainZenBell: rainZenBell,
+  },
   focus: {
     ambient: ambientFocus,
     rain: '/assets/sounds/focus/rain.mp3', // 未実装
     forest: '/assets/sounds/focus/forest.mp3', // 未実装
   },
   sleep: {
-    fireplace: '/assets/sounds/sleep/fireplace.mp3', // 未実装
+    fireplace: fireplaceSleep,
     stars: '/assets/sounds/sleep/stars.mp3', // 未実装
     rain: rainSleep,
   },

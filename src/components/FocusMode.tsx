@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Button } from './ui/button';
-import { ArrowLeft, Play, Pause, RotateCcw, Volume2 } from 'lucide-react';
+import { ArrowLeft, Play, Pause, RotateCcw, Volume2, Waves } from 'lucide-react';
 import { Slider } from './ui/slider';
 import { DigitalClock } from './DigitalClock';
 import { VisualEffects } from './VisualEffects';
 import { ReactionButton } from './ReactionButton';
 import { Language } from './translations';
 import { useTranslation } from './translations';
-import { useAudio } from '../hooks/useAudio';
-import { SOUND_PATHS } from '../assets/audio';
+import { useAudioContext } from '../contexts/AudioContext';
 
 interface FocusModeProps {
   onBack: () => void;
@@ -21,20 +20,10 @@ export function FocusMode({ onBack, language }: FocusModeProps) {
   const [workDuration, setWorkDuration] = useState(25); // 作業時間（分）
   const [breakDuration, setBreakDuration] = useState(5); // 休憩時間（分）
   const [timeLeft, setTimeLeft] = useState(25 * 60); // 25分のポモドーロタイマー
-  const [volume, setVolume] = useState([70]);
   const [session, setSession] = useState<'work' | 'break'>('work');
   
-  // フォーカス音楽の管理
-  const {
-    isPlaying: isMusicPlaying,
-    play: playMusic,
-    pause: pauseMusic,
-    setVolume: setMusicVolume,
-  } = useAudio({
-    src: SOUND_PATHS.focus.ambient,
-    loop: true,
-    volume: 0.7,
-  });
+  // グローバルオーディオコントロール
+  const { playTrack, currentTrack } = useAudioContext();
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
@@ -164,45 +153,37 @@ export function FocusMode({ onBack, language }: FocusModeProps) {
               <RotateCcw className="h-5 w-5" />
             </Button>
           </div>
+          
+          {/* BGM Control - Bubble Button */}
+          <div className="flex justify-center mt-4">
+            <Button
+              onClick={() => playTrack('focus-ambient')}
+              size="sm"
+              className={`glass-button rounded-full px-6 ${
+                currentTrack === 'focus-ambient' ? 'bg-blue-500/20 text-blue-300' : ''
+              }`}
+            >
+              <Waves className="h-4 w-4 mr-2" />
+              bubble
+            </Button>
+          </div>
         </div>
 
       </div>
 
 
-      {/* Footer - BGM Controls */}
-      <div className="absolute bottom-0 left-0 right-0 z-10 p-6">
-        <div className="glass-card p-4 flex items-center justify-center space-x-6 max-w-md mx-auto">
-          <div className="flex items-center space-x-3 text-white">
-            <span className="text-sm font-medium">{t.focusMusic}</span>
-          </div>
-          <div className="flex items-center space-x-3">
-            <Button
-              onClick={() => isMusicPlaying ? pauseMusic() : playMusic()}
-              size="sm"
-              className="glass-button rounded-full w-8 h-8 p-0"
-            >
-              {isMusicPlaying ? (
-                <Pause className="h-3 w-3" />
-              ) : (
-                <Play className="h-3 w-3" />
-              )}
-            </Button>
-            <div className="flex items-center space-x-2">
-              <Volume2 className="h-3 w-3 text-white/70" />
-              <Slider
-                value={volume}
-                onValueChange={(value: number[]) => {
-                  setVolume(value);
-                  setMusicVolume(value[0] / 100);
-                }}
-                max={100}
-                step={1}
-                className="w-20"
-                disabled={!isMusicPlaying}
-              />
-            </div>
-          </div>
-        </div>
+      {/* BGM Control Button */}
+      <div className="absolute bottom-6 left-6 z-10">
+        <Button
+          onClick={() => playTrack('focus-ambient')}
+          size="sm"
+          className={`glass-button rounded-full px-4 ${
+            currentTrack === 'focus-ambient' ? 'bg-blue-500/20 text-blue-300' : ''
+          }`}
+        >
+          <Play className="h-4 w-4 mr-2" />
+          {t.focusMusic}
+        </Button>
       </div>
     </div>
   );
