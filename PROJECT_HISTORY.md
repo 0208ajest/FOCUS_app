@@ -72,6 +72,12 @@
 - TypeScriptエラー修正
 - 音量調節時のBGM停止バグ修正
 
+### Phase 8: Google Analytics 4導入（2024年12月）
+- GA4プロパティ作成（測定ID: G-JM0VDEXHP6）
+- グローバルサイトタグの実装
+- カスタムイベントトラッキングシステム構築
+- ユーザー行動分析の基盤整備
+
 ## 重要な技術的学び・解決策
 
 ### 1. 大容量ファイル管理
@@ -130,6 +136,26 @@ jobs:
         lfs: true
 ```
 
+### 6. Google Analytics 4統合
+**問題**: ユーザー行動の詳細分析ができない
+**解決策**: GA4カスタムイベントトラッキングシステム
+```typescript
+// src/utils/analytics.ts
+export const trackEvent = (eventName: string, parameters?: Record<string, any>) => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', eventName, {
+      ...parameters,
+      timestamp: new Date().toISOString(),
+    });
+  }
+};
+```
+
+**実装内容**:
+- 測定ID: G-JM0VDEXHP6
+- カスタムパラメータ: app_mode, bgm_track
+- トラッキングイベント: モード切り替え、エフェクト使用、BGM操作、セッション管理
+
 ## ファイル構造
 
 ```
@@ -147,6 +173,8 @@ src/
 ├── hooks/
 │   ├── useAudio.ts           # 単一音声管理
 │   └── useMultiAudio.ts      # 複数音声管理
+├── utils/
+│   └── analytics.ts          # GA4トラッキングユーティリティ
 ├── assets/
 │   ├── audio.ts              # 音声ファイルパス管理
 │   └── sounds/               # 音声ファイル
@@ -209,6 +237,29 @@ npm run build
 npx gh-pages -d dist
 ```
 
+## GA4トラッキング詳細
+
+### 実装済みイベント
+- **page_view**: ページビュー（各モード切り替え時）
+- **mode_change**: モード切り替え（from_mode, to_mode）
+- **effect_button_click**: エフェクトボタンクリック（effect_type, mode）
+- **bgm_play/bgm_stop**: BGM操作（track_name, mode, duration）
+- **pomodoro_start/pomodoro_complete**: ポモドーロタイマー（session_type, duration）
+- **background_color_change**: 背景色変更（color）
+- **language_change**: 言語切り替え（from_language, to_language）
+- **session_start/session_end**: セッション管理（duration, timestamp）
+- **error**: エラートラッキング（error_type, error_message, mode）
+
+### カスタムパラメータ
+- **custom_parameter_1**: アプリモード（home, focus, sleep, dashboard）
+- **custom_parameter_2**: BGMトラック名
+
+### プライバシー対応
+- プライバシーポリシー作成（PRIVACY_POLICY.md）
+- ユーザーオプトアウト機能
+- データ保持期間: 26ヶ月
+- 個人情報の収集なし
+
 ## 今後の改善点・拡張可能性
 
 ### 機能拡張
@@ -216,18 +267,21 @@ npx gh-pages -d dist
 - エフェクトの種類増加
 - ユーザー設定の永続化
 - プレイリスト機能
+- **GA4分析レポートの自動化**
 
 ### 技術改善
 - 音声ファイルの最適化
 - パフォーマンス向上
 - アクセシビリティ改善
 - PWA対応
+- **GA4カスタムディメンション追加**
 
 ### UI/UX改善
 - ダークモード/ライトモード
 - カスタムテーマ
 - アニメーション最適化
 - レスポンシブデザイン強化
+- **ユーザー行動に基づくUI最適化**
 
 ## トラブルシューティング
 
@@ -236,11 +290,15 @@ npx gh-pages -d dist
 2. **音量調節で停止**: useAudioの依存配列確認
 3. **ビルドエラー**: TypeScriptの未使用変数削除
 4. **GitHub Actions失敗**: Git LFS設定確認
+5. **GA4イベントが記録されない**: 測定ID確認、リアルタイムレポート確認
+6. **GA4トラッキングエラー**: ブラウザの開発者ツールでコンソールエラー確認
 
 ### デバッグ方法
 - ブラウザの開発者ツールでコンソールログ確認
 - React DevToolsで状態確認
 - Network タブで音声ファイル読み込み確認
+- **GA4リアルタイムレポート**: イベントの即座確認
+- **GA4デバッグビュー**: 詳細なイベントパラメータ確認
 
 ## 開発者向け情報
 
@@ -271,8 +329,46 @@ npm run dev
 - カスタムフックでロジック分離
 - Tailwind CSSでスタイリング
 
+## 最新の開発履歴（2024年12月）
+
+### GA4導入プロジェクト完了
+**実施日**: 2024年12月
+**目的**: ユーザー行動の詳細分析とアプリ改善のためのデータ収集
+
+**実装内容**:
+1. **Google Analytics 4プロパティ作成**
+   - 測定ID: G-JM0VDEXHP6
+   - ウェブストリーム設定
+   - カスタムパラメータ設定
+
+2. **カスタムイベントトラッキングシステム構築**
+   - `src/utils/analytics.ts`: トラッキングユーティリティ
+   - 9種類のイベントタイプ実装
+   - カスタムパラメータ2種類設定
+
+3. **プライバシー対応**
+   - `PRIVACY_POLICY.md`: 詳細なプライバシーポリシー
+   - ユーザーオプトアウト機能
+   - データ保護措置
+
+4. **ドキュメント整備**
+   - `GA4_SETUP_GUIDE.md`: 設定手順とトラブルシューティング
+   - プロジェクト履歴の更新
+
+**技術的成果**:
+- リアルタイムユーザー行動分析が可能
+- アプリの使用パターン把握
+- 機能改善のデータドリブンな判断が可能
+- プライバシーに配慮した分析基盤
+
+**デプロイ状況**:
+- GitHub Pages自動デプロイ完了
+- 本番環境でGA4トラッキング稼働中
+- リアルタイムレポートで動作確認済み
+
 ---
 
-**最終更新**: 2024年12月
-**プロジェクト状態**: 本番稼働中
+**最終更新**: 2024年12月（GA4導入完了）
+**プロジェクト状態**: 本番稼働中（GA4分析基盤整備完了）
 **GitHub Pages URL**: https://0208ajest.github.io/FOCUS_app/
+**GA4測定ID**: G-JM0VDEXHP6
