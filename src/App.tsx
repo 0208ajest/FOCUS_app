@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FocusMode } from "./components/FocusMode";
 import { SleepMode } from "./components/SleepMode";
@@ -11,6 +11,15 @@ import { Language } from "./components/translations";
 import { useTranslation } from "./components/translations";
 import { BarChart3, Focus, Moon, Waves, CloudRain, Flame, Droplets } from "lucide-react";
 import { AudioProvider, useAudioContext } from "./contexts/AudioContext";
+import { 
+  trackPageView, 
+  trackModeChange, 
+  trackEffectButtonClick, 
+  trackBackgroundColorChange,
+  trackLanguageChange,
+  trackSessionStart,
+  trackSessionEnd
+} from "./utils/analytics";
 
 type Mode = "home" | "focus" | "sleep" | "dashboard";
 
@@ -23,8 +32,42 @@ function AppContent() {
   const [isFireplaceActive, setIsFireplaceActive] = useState(false);
   const [isHomeRainActive, setIsHomeRainActive] = useState(false);
   const [backgroundColor, setBackgroundColor] = useState<'purple' | 'black' | 'blue' | 'green'>('purple');
+  const [sessionStartTime] = useState(Date.now());
   const t = useTranslation(language);
   const { playTrack } = useAudioContext();
+
+  // セッション開始をトラッキング
+  useEffect(() => {
+    trackSessionStart();
+    trackPageView('home', 'Serenifocus - Home');
+
+    // セッション終了をトラッキング（ページ離脱時）
+    const handleBeforeUnload = () => {
+      const sessionDuration = Date.now() - sessionStartTime;
+      trackSessionEnd(sessionDuration);
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [sessionStartTime]);
+
+  // モード変更をトラッキング
+  const handleModeChange = (newMode: Mode) => {
+    trackModeChange(currentMode, newMode);
+    setCurrentMode(newMode);
+  };
+
+  // 言語変更をトラッキング
+  const handleLanguageChange = (newLanguage: Language) => {
+    trackLanguageChange(language, newLanguage);
+    setLanguage(newLanguage);
+  };
+
+  // 背景色変更をトラッキング
+  const handleBackgroundColorChange = (color: 'purple' | 'black' | 'blue' | 'green') => {
+    trackBackgroundColorChange(color);
+    setBackgroundColor(color);
+  };
 
   // 背景色に応じたグラデーション
   const getBackgroundGradient = () => {
@@ -70,7 +113,7 @@ function AppContent() {
             <div className="absolute top-6 right-6 z-20 flex items-center space-x-3">
               <ReactionButton pageId="home" />
               <motion.button
-                onClick={() => setCurrentMode("dashboard")}
+                onClick={() => handleModeChange("dashboard")}
                 className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-all duration-300 border border-white/20"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
@@ -283,6 +326,7 @@ function AppContent() {
                 onClick={() => {
                   setIsWaveActive(!isWaveActive);
                   playTrack('home-ocean-zen');
+                  trackEffectButtonClick('wave', 'home');
                 }}
                 className={`w-12 h-12 backdrop-blur-md rounded-full flex items-center justify-center transition-all duration-300 border ${
                   isWaveActive 
@@ -300,6 +344,7 @@ function AppContent() {
                 onClick={() => {
                   setIsRainActive(!isRainActive);
                   playTrack('home-rain-zen');
+                  trackEffectButtonClick('rain', 'home');
                 }}
                 className={`w-12 h-12 backdrop-blur-md rounded-full flex items-center justify-center transition-all duration-300 border ${
                   isRainActive 
@@ -317,6 +362,7 @@ function AppContent() {
                 onClick={() => {
                   setIsBubbleActive(!isBubbleActive);
                   playTrack('focus-ambient');
+                  trackEffectButtonClick('bubble', 'home');
                 }}
                 className={`w-12 h-12 backdrop-blur-md rounded-full flex items-center justify-center transition-all duration-300 border ${
                   isBubbleActive 
@@ -334,6 +380,7 @@ function AppContent() {
                 onClick={() => {
                   setIsFireplaceActive(!isFireplaceActive);
                   playTrack('sleep-fireplace');
+                  trackEffectButtonClick('fireplace', 'home');
                 }}
                 className={`w-12 h-12 backdrop-blur-md rounded-full flex items-center justify-center transition-all duration-300 border ${
                   isFireplaceActive 
@@ -351,6 +398,7 @@ function AppContent() {
                 onClick={() => {
                   setIsHomeRainActive(!isHomeRainActive);
                   playTrack('sleep-rain');
+                  trackEffectButtonClick('home_rain', 'home');
                 }}
                 className={`w-12 h-12 backdrop-blur-md rounded-full flex items-center justify-center transition-all duration-300 border ${
                   isHomeRainActive 
@@ -377,7 +425,7 @@ function AppContent() {
               <div className="flex gap-12 items-center">
                 {/* Focus Mode */}
                 <motion.button
-                  onClick={() => setCurrentMode("focus")}
+                  onClick={() => handleModeChange("focus")}
                   className="group relative w-20 h-20 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-white shadow-2xl hover:shadow-blue-500/25 transition-all duration-300"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
@@ -388,7 +436,7 @@ function AppContent() {
 
                 {/* Sleep Mode */}
                 <motion.button
-                  onClick={() => setCurrentMode("sleep")}
+                  onClick={() => handleModeChange("sleep")}
                   className="group relative w-20 h-20 bg-gradient-to-br from-slate-600 to-slate-800 rounded-full flex items-center justify-center text-white shadow-2xl hover:shadow-slate-500/25 transition-all duration-300"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
@@ -401,14 +449,14 @@ function AppContent() {
 
             <LanguageSelector
               language={language}
-              onLanguageChange={setLanguage}
+              onLanguageChange={handleLanguageChange}
             />
 
             {/* 背景色変更ボタン（右下） */}
             <div className="absolute bottom-6 right-6 z-30 flex flex-col space-y-2">
               {/* 紫（デフォルト） */}
               <motion.button
-                onClick={() => setBackgroundColor('purple')}
+                onClick={() => handleBackgroundColorChange('purple')}
                 className={`w-10 h-10 rounded-full border-2 transition-all duration-300 ${
                   backgroundColor === 'purple' 
                     ? 'bg-purple-500 border-purple-300 shadow-lg' 
@@ -420,7 +468,7 @@ function AppContent() {
               
               {/* 黒 */}
               <motion.button
-                onClick={() => setBackgroundColor('black')}
+                onClick={() => handleBackgroundColorChange('black')}
                 className={`w-10 h-10 rounded-full border-2 transition-all duration-300 ${
                   backgroundColor === 'black' 
                     ? 'bg-gray-800 border-gray-300 shadow-lg' 
@@ -432,10 +480,7 @@ function AppContent() {
               
               {/* 青 */}
               <motion.button
-                onClick={() => {
-                  console.log('Blue button clicked');
-                  setBackgroundColor('blue');
-                }}
+                onClick={() => handleBackgroundColorChange('blue')}
                 className={`w-10 h-10 rounded-full border-2 transition-all duration-300 ${
                   backgroundColor === 'blue' 
                     ? 'bg-blue-500 border-blue-300 shadow-lg' 
@@ -447,10 +492,7 @@ function AppContent() {
               
               {/* 緑 */}
               <motion.button
-                onClick={() => {
-                  console.log('Green button clicked');
-                  setBackgroundColor('green');
-                }}
+                onClick={() => handleBackgroundColorChange('green')}
                 className={`w-10 h-10 rounded-full border-2 transition-all duration-300 ${
                   backgroundColor === 'green' 
                     ? 'bg-green-500 border-green-300 shadow-lg' 
@@ -471,7 +513,7 @@ function AppContent() {
       {currentMode !== "home" && (
         <LanguageSelector
           language={language}
-          onLanguageChange={setLanguage}
+          onLanguageChange={handleLanguageChange}
         />
       )}
       <GlobalAudioControl />
